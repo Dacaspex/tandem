@@ -1,0 +1,25 @@
+
+.user-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-1);
+    background-color: var(--surface-a10);
+    box-shadow: var(--shadow-s);
+    box-sizing: border-box;
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.user-card-name {
+    font-size: 1.5rem;
+}
+
+.user-card-self-flare {
+    margin-left: 0.5rem;
+    color: var(--color-a10);
+}
+
+.user-card-last-updated {
+    color: var(--color-a10);
+    font-size: 0.8rem;
+}
