@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
   }, []);
 
   const login = async (username: string, password: string) => {
-    const res = await fetch("http://localhost:5111/api/auth/login", {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({username, password}),
@@ -64,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
   };
 
   const getMe = async (accessToken: string) => {
-    const userRes = await fetch("http://localhost:5111/api/users/me", {
+    const userRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/me`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     if (userRes.ok) {
@@ -80,7 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
       if (!tokenToUse) throw new Error("Session expired");
     }
 
-    const res = await fetch(input, {
+    const res = await fetch(import.meta.env.VITE_API_BASE_URL + input, {
       ...init,
       headers: {
         ...(init.headers || {}),
@@ -99,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
   };
 
   return (
-    <AuthContext.Provider value={{accessToken, login, logout, authenticatedFetch, user}}>
+    <AuthContext.Provider value={{accessToken, login, logout, authenticatedFetch, authenticatedUser: user}}>
       {children}
     </AuthContext.Provider>
   );

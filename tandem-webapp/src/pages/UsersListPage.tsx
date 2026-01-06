@@ -4,6 +4,7 @@ import {useApi} from "../api/client.ts";
 import {useEffect, useState} from "react";
 import {useAuth} from "../context/useAuth.ts";
 import type {UserType} from "../context/AuthContext.tsx";
+import {Heading} from "@chakra-ui/react";
 
 function UsersListPage() {
   const { authenticatedUser } = useAuth();
@@ -31,7 +32,7 @@ function UsersListPage() {
 
   return (
     <>
-      <h1>Tandem</h1>
+      <Heading size="2xl">Tandem</Heading>
       <div style={{ display: 'flex', flexDirection:'column', gap: '0.75rem'}}>{ userCards }</div>
     </>
   )

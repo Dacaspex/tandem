@@ -2,7 +2,6 @@ import './App.css'
 import UserCard from "./components/UserCard.tsx";
 
 function App() {
-
   return (
     <>
       <h1>Tandem</h1>

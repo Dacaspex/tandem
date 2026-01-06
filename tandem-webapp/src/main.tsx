@@ -15,16 +15,16 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route index path="/" element={<Home/>}/>
-          <Route path="/login" element={<LoginPage/>}/>
+          <Route index path="/" element={ <Home/> }/>
+          <Route path="/login" element={ <LoginPage/> }/>
           <Route path="/private" element={
             <PrivateRoute>
               <h1>Private</h1>
             </PrivateRoute>
           }/>
 
-          <Route path="users" element={<UsersListPage/>}/>
-          <Route path="users/:userId" element={<UserTopicsPage/>}/>
+          <Route path="users" element={ <UsersListPage/> }/>
+          <Route path="users/:userId" element={ <UserTopicsPage/> }/>
         </Routes>
       </AuthProvider>
     </BrowserRouter>

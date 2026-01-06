@@ -1,34 +1,45 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
-  /* https://colorffy.com/dark-theme-generator?colors=37c7f6-121212 */
-  --surface-a0: #121212;
-  --surface-a10: #2f3639;
-  --surface-a20: #464c4f;
-  --surface-a30: #5d6366;
+    /* https://colorffy.com/dark-theme-generator?colors=37c7f6-121212 */
+    --surface-a0: #121212;
+    --surface-a10: #2f3639;
+    --surface-a20: #464c4f;
+    --surface-a30: #5d6366;
 
-  --color-a0: rgba(255, 255, 255, 0.87);
-  --color-a10: rgba(255, 255, 255, 0.60);
+    --color-a0: rgba(255, 255, 255, 0.87);
+    --color-a10: rgba(255, 255, 255, 0.60);
 
-  background-color: var(--surface-a0);
+    background-color: var(--surface-a0);
 
-  --radius-0: 4px;
-  --radius-1: 8px;
+    --radius-0: 3px;
+    --radius-1: 6px;
+
+    --primary-a0: #477fea;
+
+    --success-a0: #5cb85c;
+
+    --danger-a0: #d9534f;
 }
 
 body {
   margin: 0;
   padding: 0;
+}
+
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
 }
 
 button {

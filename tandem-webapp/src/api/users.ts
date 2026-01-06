@@ -15,25 +15,25 @@ export interface Topic {
 export function create(authenticatedFetch: typeof fetch) {
   return {
     async getUser(userId: string): Promise<UserType> {
-      const res = await authenticatedFetch("http://localhost:5111/api/users/" + userId);
+      const res = await authenticatedFetch("/api/users/" + userId);
       if (!res.ok) throw new Error("Failed to fetch user");
       return res.json();
     },
 
     async getUsers(): Promise<UserType[]> {
-      const res = await authenticatedFetch("http://localhost:5111/api/users");
+      const res = await authenticatedFetch("/api/users");
       if (!res.ok) throw new Error("Failed to fetch users");
       return res.json();
     },
 
     async getTopics(userId: string): Promise<TopicGroup[]> {
-      const res = await authenticatedFetch("http://localhost:5111/api/topics/" + userId);
+      const res = await authenticatedFetch("/api/topics/" + userId);
       if (!res.ok) throw new Error("Failed to fetch topics");
       return res.json();
     },
 
     async updateTopicRating(topicId: string, rating: number): Promise<void> {
-      const res = await authenticatedFetch("http://localhost:5111/api/topics", {
+      const res = await authenticatedFetch("/api/topics", {
         method: "PATCH",
         body: JSON.stringify({
           topicId: topicId,

@@ -1,9 +1,9 @@
 import {NavLink, useParams} from "react-router";
-import Button from "../components/Button.tsx";
+// import Button from "../components/Button.tsx";
 import {useApi} from "../api/client.ts";
 import {useEffect, useState} from "react";
 import type {TopicGroup as TopicGroupType} from "../api/users.ts";
-import TopicGroup from "../components/TopicGroup.tsx";
+import TopicGroup from "../components/Topics/TopicGroup.tsx";
 import {useAuth} from "../context/useAuth.ts";
 import type {UserType} from "../context/AuthContext.tsx";
 
@@ -44,9 +44,6 @@ function UserTopicsPage() {
     <>
       <h1>Tandem</h1>
       <h3>Casper (you)</h3>
-      <NavLink to='/users'>
-        <Button text={ 'Back' }/>
-      </NavLink>
 
       <div style={{ padding: '15px' }}/>
       <div className='test'>
