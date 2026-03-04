@@ -3,17 +3,15 @@ import {useNavigate} from "react-router";
 import {AuthContext, type UserType} from "./AuthContext";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
   const [user, setUser] = useState<UserType | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const init = async () => {
-      const savedAccessToken = localStorage.getItem("accessToken");
-      if (savedAccessToken) {
-        setAccessToken(savedAccessToken);
+      if (accessToken) {
         try {
-          await getMe(savedAccessToken);
+          await getMe(accessToken);
         } catch {/* ignored */}
       }
     }
@@ -99,8 +97,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}
   };
 
   return (
-    <AuthContext.Provider value={{accessToken, login, logout, authenticatedFetch, authenticatedUser: user}}>
-      {children}
+    <AuthContext.Provider value={{ accessToken, login, logout, authenticatedFetch, authenticatedUser: user }}>
+      { children }
     </AuthContext.Provider>
   );
 }

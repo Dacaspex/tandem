@@ -9,14 +9,20 @@ using Tandem.Persistence.Seeder;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.ClearProviders();
+    loggingBuilder.AddConsole();
+});
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<TandemContext>(options => options.UseInMemoryDatabase("tandem"));
-
 builder.Services.AddScoped<Seeder>();
 
-builder.Services.AddPersistence();
+Console.WriteLine(builder.Configuration["ConnectionStrings:DefaultConnection"]);
+
+builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddBusinessLogic();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -58,7 +64,11 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins(
+                // Local development server
+                "http://localhost:5173",
+                // Running inside docker compose
+                "http://localhost")
             .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod();
@@ -66,6 +76,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+DbStartup.ProvisionSchema(app.Services.CreateScope().ServiceProvider);
 
 if (app.Environment.IsDevelopment())
 {
@@ -80,11 +92,12 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await Test();
+await SeedDatabase();
 
 app.Run();
+return;
 
-async Task Test()
+async Task SeedDatabase()
 {
     using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<Seeder>();

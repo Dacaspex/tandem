@@ -27,7 +27,7 @@ interface DotsIndicatorProps {
  * <FiveDotsIndicator activeIndex={2} size={12} activeScale={1.7} />
  */
 export default function FiveDotsIndicator({
-                                            activeIndex = 0,
+                                            activeIndex = 1,
                                             size = 6,
                                             activeScale = 2.1,
                                             gap = 5,
@@ -57,13 +57,13 @@ export default function FiveDotsIndicator({
       }}
     >
       {dots.map((_, i) => {
-        const isActive = i === activeIndex;
+        const isActive = i === (activeIndex - 1);
         const dotSize = isActive ? size * activeScale : size;
 
         return (
           <div
             key={i}
-            aria-current={isActive}
+            aria-current={ isActive }
             style={{
               width: `${dotSize}px`,
               height: `${dotSize}px`,

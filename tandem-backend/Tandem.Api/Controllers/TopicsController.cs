@@ -17,13 +17,15 @@ public class TopicsController : BaseController
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly UserRepository _userRepository;
     private readonly UpdateTopicBL _updateTopicBl;
+    private readonly ITopicLogic _topicLogic;
 
     public TopicsController(UserManager<ApplicationUser> userManager, UserRepository userRepository,
-        UpdateTopicBL updateTopicBl)
+        UpdateTopicBL updateTopicBl, ITopicLogic topicLogic)
     {
         _userManager = userManager;
         _userRepository = userRepository;
         _updateTopicBl = updateTopicBl;
+        _topicLogic = topicLogic;
     }
 
     [HttpGet("{userId}")]
@@ -40,9 +42,19 @@ public class TopicsController : BaseController
         return Ok(Mapper.Map(await _userRepository.GetTopicGroups(user.Id)));
     }
 
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Create(CreateTopicDto dto)
+    {
+        // TODO: Validate that the topic group belongs to the user?
+        var topic = await _topicLogic.CreateTopicAsync(dto.TopicGroupId, dto.Name);
+
+        return Ok(Mapper.Map(topic));
+    }
+    
     [HttpPatch]
     [Authorize]
-    public async Task<IActionResult> UpdateTopic(UpdateTopicDto dto)
+    public async Task<IActionResult> Update(UpdateTopicDto dto)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null)
@@ -56,5 +68,19 @@ public class TopicsController : BaseController
         }
 
         return ToActionResult(await _updateTopicBl.UpdateTopicRating(userId, dto.TopicId, dto.Rating));
+    }
+
+    [HttpDelete]
+    [Authorize]
+    public async Task<IActionResult> Delete(DeleteTopicDto dto)
+    {
+        if (dto.TopicId == Guid.Empty)
+        {
+            return BadRequest();
+        }
+
+        await _topicLogic.DeleteTopicAsync(dto.TopicId);
+
+        return Ok();
     }
 }

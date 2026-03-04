@@ -8,6 +8,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tandem.Persistence", "Tande
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tandem.Persistence.Seeder", "Tandem.Persistence.Seeder\Tandem.Persistence.Seeder.csproj", "{808E6E0E-9D3B-4125-8A96-1C0128A857C1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Repository items", "Repository items", "{60885A7B-1DDE-461C-A436-7FD16CEB9AF2}"
+	ProjectSection(SolutionItems) = preProject
+		..\docker-compose.yml = ..\docker-compose.yml
+		Dockerfile = Dockerfile
+		..\.env = ..\.env
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

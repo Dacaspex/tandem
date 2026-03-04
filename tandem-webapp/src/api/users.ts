@@ -1,12 +1,12 @@
 import type {UserType} from "../context/AuthContext.tsx";
 
-export interface TopicGroup {
+export interface TopicGroupType {
   id: string;
   name: string;
-  topics: Topic[];
+  topics: TopicType[];
 }
 
-export interface Topic {
+export interface TopicType {
   id: string;
   name: string;
   rating: number;
@@ -26,10 +26,33 @@ export function create(authenticatedFetch: typeof fetch) {
       return res.json();
     },
 
-    async getTopics(userId: string): Promise<TopicGroup[]> {
+    async getTopics(userId: string): Promise<TopicGroupType[]> {
       const res = await authenticatedFetch("/api/topics/" + userId);
       if (!res.ok) throw new Error("Failed to fetch topics");
       return res.json();
+    },
+
+    async createTopic(topicGroupId: string, topicName: string): Promise<TopicType> {
+      const result = await authenticatedFetch("/api/topics", {
+        method: "POST",
+        body: JSON.stringify({
+          topicGroupId: topicGroupId,
+          name: topicName
+        }),
+      });
+      if (!result.ok) throw new Error("Failed to create topic");
+      return result.json();
+    },
+
+    async createTopicGroup(topicGroupName: string): Promise<TopicGroupType> {
+      const result = await authenticatedFetch("/api/topicGroups", {
+        method: "POST",
+        body: JSON.stringify({
+          name: topicGroupName,
+        })
+      });
+      if (!result.ok) throw new Error("Failed to create topicGroup");
+      return result.json();
     },
 
     async updateTopicRating(topicId: string, rating: number): Promise<void> {
@@ -41,6 +64,16 @@ export function create(authenticatedFetch: typeof fetch) {
         })
       });
       if (!res.ok) throw new Error("Failed to update topic");
+    },
+
+    async deleteTopic(topicId: string): Promise<void> {
+      const result = await authenticatedFetch("/api/topics", {
+        method: "DELETE",
+        body: JSON.stringify({
+          topicId: topicId,
+        })
+      });
+      if (!result.ok) throw new Error("Failed to delete topic");
     }
   }
 }

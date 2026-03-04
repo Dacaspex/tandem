@@ -1,0 +1,20 @@
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(10, 10, 10, 0.8);
+    padding: 0 0.5rem;
+
+    display: flex;
+    align-items: center;
+}
+
+.modal-content {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--surface-a0);
+    max-height: 90vh;
+    border-radius: var(--radius-1);
+    padding: 0.5rem;
+    border: 1px solid var(--surface-a10);
+}

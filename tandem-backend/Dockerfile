@@ -3,9 +3,9 @@ WORKDIR /app
 
 COPY . .
 RUN dotnet restore
-RUN dotnet publish -o out
+RUN dotnet publish --configuration release --output out
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /app
 COPY --from=build /app/out .
 ENTRYPOINT ["dotnet", "Tandem.Api.dll"]

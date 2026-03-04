@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
             var refreshToken = GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7).ToUniversalTime();
             await _userManager.UpdateAsync(user);
 
             return Ok(new { accessToken, refreshToken });

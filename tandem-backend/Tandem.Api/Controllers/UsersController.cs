@@ -43,7 +43,7 @@ public class UsersController : BaseController
         return Ok(Mapper.Map(user));
     }
 
-    [HttpGet("/{userId}")]
+    [HttpGet("{userId}")]
     [Authorize]
     public async Task<IActionResult> GetUser(string userId)
     {

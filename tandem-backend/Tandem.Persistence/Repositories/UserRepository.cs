@@ -25,8 +25,8 @@ public class UserRepository
     public Task<List<TopicGroup>> GetTopicGroups(string userId)
     {
         return _context.TopicGroups
-            .Include(t => t.Topics)
-            .Where(t => t.UserId == userId)
+            .Include(tg => tg.Topics.OrderBy(t => t.Name))
+            .Where(tg => tg.UserId == userId)
             .ToListAsync();
     }
 

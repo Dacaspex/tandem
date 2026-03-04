@@ -28,6 +28,7 @@
     padding: 0 0.5rem;
     display: flex;
     align-items: center;
+    min-width: 16px;
 }
 
 .topic-increase.disabled, .topic-decrease.disabled {
@@ -48,4 +49,5 @@
 
 .topic-action {
     padding: 0 0.3rem;
+    cursor: pointer;
 }

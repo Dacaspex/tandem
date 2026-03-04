@@ -30,6 +30,8 @@
     --success-a0: #5cb85c;
 
     --danger-a0: #d9534f;
+
+    --padding-form-y: 0.35rem;
 }
 
 body {
