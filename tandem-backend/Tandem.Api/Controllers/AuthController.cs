@@ -58,6 +58,37 @@ public class AuthController : ControllerBase
         return Ok(new { accessToken = newAccessToken, refreshToken = newRefreshToken });
     }
 
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterDto request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Password)) return BadRequest("Password is required");
+
+        var existingUser = await _userManager.FindByNameAsync(request.Username);
+        if (existingUser is not null) return BadRequest("Username already exists");
+
+        var user = new ApplicationUser
+        {
+            UserName = request.Username
+        };
+
+        var result = await _userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        // Generate tokens immediately after successful registration
+        var accessToken = GenerateJwtToken(user);
+        var refreshToken = GenerateRefreshToken();
+
+        user.RefreshToken = refreshToken;
+        user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+        await _userManager.UpdateAsync(user);
+
+        return Ok(new { accessToken, refreshToken });
+    }
+
     private string GenerateJwtToken(ApplicationUser user)
     {
         var claims = new[]

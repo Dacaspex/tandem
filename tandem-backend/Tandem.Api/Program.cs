@@ -92,7 +92,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await SeedDatabase();
+if (app.Environment.IsDevelopment())
+{
+    await SeedDatabase();
+}
 
 app.Run();
 return;

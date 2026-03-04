@@ -6,6 +6,7 @@ import React from "react";
 import {useModal} from "@/context/Modal/ModalContext.tsx";
 import CreateTopicModal from "@/Modals/CreateTopicModal.tsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {LuPencil, LuTrash} from "react-icons/lu";
 
 interface TopicGroupProps {
   id: string;
@@ -52,6 +53,17 @@ export default function TopicGroup({ id, title, topics, editMode, canChangeRatin
     }
   });
 
+  const deleteTopicGroupMutation = useMutation({
+    mutationFn: () => {
+      return api.users.deleteTopicGroup(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["topicGroups", userId],
+      })
+    }
+  });
+
   const onTopicRatingUpdated = async (topic: TopicType, rating: number) => {
     await updateTopicMutation.mutateAsync({topicId: topic.id, rating});
   };
@@ -65,6 +77,10 @@ export default function TopicGroup({ id, title, topics, editMode, canChangeRatin
     open(<CreateTopicModal onSubmit={ name => createTopic(name) } onCancel={ close }/>);
   };
 
+  const deleteTopicGroup = async () => {
+    await deleteTopicGroupMutation.mutateAsync();
+  }
+
   const addTopicButton = (
     <div
       className="button button-primary button-outlined button-s"
@@ -73,9 +89,21 @@ export default function TopicGroup({ id, title, topics, editMode, canChangeRatin
     </div>
   )
 
+  const editTopicGroupJsx = (
+    <div className="topic-group-edit">
+      <LuPencil/>
+      <div onClick={ deleteTopicGroup }>
+        <LuTrash className='text-danger'/>
+      </div>
+    </div>
+  );
+
   return (
     <div className="topic-group-container mb-1">
-      <div className="topic-group-title">{title}</div>
+      <div className="topic-group-title">
+        { title }
+      </div>
+      { editMode && editTopicGroupJsx }
       <div className="topic-group-box">
         {topics.map((topic) => (
           <Topic

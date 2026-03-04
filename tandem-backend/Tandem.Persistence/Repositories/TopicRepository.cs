@@ -36,6 +36,14 @@ public class TopicRepository : ITopicRepository
         return topic;
     }
 
+    public Task DeleteTopicGroupAsync(Guid topicGroupId)
+    {
+        var topicGroup = _context.TopicGroups.FirstOrDefault(t => t.Id == topicGroupId);
+        if (topicGroup is null) return Task.CompletedTask;
+        _context.TopicGroups.Remove(topicGroup);
+        return _context.SaveChangesAsync();
+    }
+
     public async Task DeleteTopicAsync(Guid id)
     {
         var topic = await _context.FindAsync<Topic>(id);

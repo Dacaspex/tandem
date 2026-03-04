@@ -6,5 +6,6 @@ public interface ITopicRepository
 {
     public Task<TopicGroup> CreateAsync(TopicGroup topicGroup);
     public Task<Topic> CreateAsync(Topic topic);
+    public Task DeleteTopicGroupAsync(Guid topicGroupId);
     public Task DeleteTopicAsync(Guid id);
 }

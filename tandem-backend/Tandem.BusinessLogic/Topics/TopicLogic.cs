@@ -40,6 +40,11 @@ public class TopicLogic : ITopicLogic
         return topic;
     }
 
+    public Task DeleteTopicGroupAsync(Guid topicGroupId)
+    {
+        return _topicRepository.DeleteTopicGroupAsync(topicGroupId);
+    }
+
     public Task DeleteTopicAsync(Guid id)
     {
         return _topicRepository.DeleteTopicAsync(id);

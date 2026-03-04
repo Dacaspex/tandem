@@ -11,6 +11,12 @@
     margin-bottom: 0.5rem;
 }
 
+.topic-group-edit {
+    display: inline-flex;
+    margin-left: 0.5rem;
+    gap: 0.5rem;
+}
+
 .topic-group-box {
     border-radius: var(--radius-1);
     padding: 0.5rem;

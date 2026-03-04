@@ -74,6 +74,16 @@ export function create(authenticatedFetch: typeof fetch) {
         })
       });
       if (!result.ok) throw new Error("Failed to delete topic");
+    },
+
+    async deleteTopicGroup(topicGroupId: string): Promise<void> {
+      const result = await authenticatedFetch("/api/topicGroups", {
+        method: "DELETE",
+        body: JSON.stringify({
+          topicGroupId: topicGroupId,
+        })
+      });
+      if (!result.ok) throw new Error("Failed to delete topicGroup");
     }
   }
 }

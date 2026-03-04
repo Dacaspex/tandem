@@ -27,4 +27,18 @@ public class TopicGroupsController : BaseController
 
         return Ok(Mapper.Map(topicGroup));
     }
+
+    [HttpDelete]
+    [Authorize]
+    public async Task<IActionResult> Delete(DeleteTopicGroupDto request)
+    {
+        if (request.TopicGroupId == Guid.Empty)
+        {
+            return BadRequest();
+        }
+
+        await _topicLogic.DeleteTopicGroupAsync(request.TopicGroupId);
+
+        return Ok();
+    }
 }
