@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Tandem.Persistence.Entities;
+using Tandem.Domain.Topics;
+using Tandem.Domain.Users;
+using Tandem.Infrastructure.Database;
 
 namespace Tandem.Persistence.Seeder;
 

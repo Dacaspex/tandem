@@ -1,22 +1,19 @@
-using Tandem.Api.Dtos.Response;
-using Tandem.Persistence.Entities;
+using Tandem.Api.Queries.GetTopics;
+using Tandem.Api.Queries.GetUsers;
+using Tandem.Domain.Topics;
+using Tandem.Domain.Users;
 
 namespace Tandem.Api.Dtos;
 
 public static class Mapper
 {
-    public static UserDto Map(ApplicationUser user)
+    public static GetUsersDto Map(ApplicationUser user)
     {
-        return new UserDto
+        return new GetUsersDto
         {
             Id = user.Id,
             Name = user.UserName,
         };
-    }
-
-    public static IEnumerable<TopicGroupDto> Map(IEnumerable<TopicGroup> topicGroups)
-    {
-        return topicGroups.Select(Map);
     }
 
     public static TopicGroupDto Map(TopicGroup topicGroup)

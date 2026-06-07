@@ -1,10 +1,12 @@
 using System.Text;
+using FluentValidation;
+using Mediator;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Tandem.BusinessLogic;
-using Tandem.Persistence;
-using Tandem.Persistence.Entities;
+using Tandem.Api;
+using Tandem.Api.Common;
+using Tandem.Domain.Users;
+using Tandem.Infrastructure.Database;
 using Tandem.Persistence.Seeder;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,10 +22,14 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<Seeder>();
 
-Console.WriteLine(builder.Configuration["ConnectionStrings:DefaultConnection"]);
-
 builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddBusinessLogic();
+
+builder.Services.AddMediator();
+builder.Services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
@@ -77,8 +83,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-DbStartup.ProvisionSchema(app.Services.CreateScope().ServiceProvider);
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -91,6 +95,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await DbStartup.MigrateAsync(app.Services);
 
 if (app.Environment.IsDevelopment())
 {

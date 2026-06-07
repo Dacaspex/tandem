@@ -1,85 +1,94 @@
-using System.Security.Claims;
+using Mediator;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Tandem.Api.Dtos;
-using Tandem.Api.Dtos.Request;
-using Tandem.BusinessLogic;
-using Tandem.Persistence.Entities;
-using Tandem.Persistence.Repositories;
+using Tandem.Api.Commands.CreateTopic;
+using Tandem.Api.Commands.DeleteTopic;
+using Tandem.Api.Commands.UpdateTopic;
+using Tandem.Api.Queries.GetTopics;
 
 namespace Tandem.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TopicsController : BaseController
+public class TopicsController : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly UserRepository _userRepository;
-    private readonly UpdateTopicBL _updateTopicBl;
-    private readonly ITopicLogic _topicLogic;
+    private readonly IMediator _mediator;
 
-    public TopicsController(UserManager<ApplicationUser> userManager, UserRepository userRepository,
-        UpdateTopicBL updateTopicBl, ITopicLogic topicLogic)
+    public TopicsController(IMediator mediator)
     {
-        _userManager = userManager;
-        _userRepository = userRepository;
-        _updateTopicBl = updateTopicBl;
-        _topicLogic = topicLogic;
+        _mediator = mediator;
     }
 
     [HttpGet("{userId}")]
     [Authorize]
-    public async Task<IActionResult> GetTopics(string userId)
+    public async Task<IActionResult> GetTopics(string userId, CancellationToken ct)
     {
-        // Retrieve the user from the UserManager
-        var user = await _userManager.FindByIdAsync(userId);
-        if (user == null)
+        var query = new GetTopicsQuery(userId);
+        var result = await _mediator.Send(query, ct);
+
+        if (!result.IsSuccess)
         {
-            return NotFound();
+            return result.Error switch
+            {
+                GetTopicsError.UserNotFoundError => NotFound(),
+                _ => Problem()
+            };
         }
 
-        return Ok(Mapper.Map(await _userRepository.GetTopicGroups(user.Id)));
+        return Ok(result.Value);
     }
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Create(CreateTopicDto dto)
+    public async Task<IActionResult> Create(CreateTopicCommand command, CancellationToken ct)
     {
-        // TODO: Validate that the topic group belongs to the user?
-        var topic = await _topicLogic.CreateTopicAsync(dto.TopicGroupId, dto.Name);
+        var result = await _mediator.Send(command, ct);
 
-        return Ok(Mapper.Map(topic));
+        if (!result.IsSuccess)
+        {
+            return result.Error switch
+            {
+                CreateTopicError.TopicGroupNotFound => NotFound(),
+                _ => Problem()
+            };
+        }
+
+        return Ok(result.Value);
     }
-    
+
     [HttpPatch]
     [Authorize]
-    public async Task<IActionResult> Update(UpdateTopicDto dto)
+    public async Task<IActionResult> Update(UpdateTopicCommand command, CancellationToken ct)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null)
+        var result = await _mediator.Send(command, ct);
+
+        if (!result.IsSuccess)
         {
-            return Unauthorized();
+            return result.Error switch
+            {
+                UpdateTopicError.UserNotFound => Unauthorized(),
+                UpdateTopicError.TopicNotFound => NotFound(),
+                _ => Problem()
+            };
         }
 
-        if (dto.Rating is < 1 or > 5)
-        {
-            return BadRequest("Rating must be between 1 and 5");
-        }
-
-        return ToActionResult(await _updateTopicBl.UpdateTopicRating(userId, dto.TopicId, dto.Rating));
+        return Ok();
     }
 
     [HttpDelete]
     [Authorize]
-    public async Task<IActionResult> Delete(DeleteTopicDto dto)
+    public async Task<IActionResult> Delete(DeleteTopicCommand command, CancellationToken ct)
     {
-        if (dto.TopicId == Guid.Empty)
-        {
-            return BadRequest();
-        }
+        var result = await _mediator.Send(command, ct);
 
-        await _topicLogic.DeleteTopicAsync(dto.TopicId);
+        if (!result.IsSuccess)
+        {
+            return result.Error switch
+            {
+                DeleteTopicError.TopicNotFound => NotFound(),
+                _ => Problem()
+            };
+        }
 
         return Ok();
     }

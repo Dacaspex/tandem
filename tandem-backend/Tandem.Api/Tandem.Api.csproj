@@ -7,16 +7,23 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
+        <PackageReference Include="FluentValidation" Version="12.1.1" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.9" />
+        <PackageReference Include="Mediator.SourceGenerator" Version="3.0.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Mediator.Abstractions" Version="3.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Tandem.BusinessLogic\Tandem.BusinessLogic.csproj" />
+      <ProjectReference Include="..\Tandem.Infrastructure.Database\Tandem.Infrastructure.Database.csproj" />
       <ProjectReference Include="..\Tandem.Persistence.Seeder\Tandem.Persistence.Seeder.csproj" />
-      <ProjectReference Include="..\Tandem.Persistence\Tandem.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

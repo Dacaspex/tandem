@@ -1,43 +1,53 @@
-using System.Security.Claims;
+using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Tandem.Api.Dtos;
-using Tandem.Api.Dtos.Request;
-using Tandem.BusinessLogic;
+using Tandem.Api.Commands.CreateTopicGroup;
+using Tandem.Api.Commands.DeleteTopicGroup;
 
 namespace Tandem.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TopicGroupsController : BaseController
+public class TopicGroupsController : ControllerBase
 {
-    private readonly ITopicLogic _topicLogic;
+    private readonly IMediator _mediator;
 
-    public TopicGroupsController(ITopicLogic topicLogic)
+    public TopicGroupsController(IMediator mediator)
     {
-        _topicLogic = topicLogic;
+        _mediator = mediator;
     }
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Create(CreateTopicGroupDto request)
+    public async Task<IActionResult> Create(CreateTopicGroupCommand command, CancellationToken ct)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var topicGroup = await _topicLogic.CreateTopicGroupAsync(userId!, request.Name);
+        var result = await _mediator.Send(command, ct);
 
-        return Ok(Mapper.Map(topicGroup));
+        if (!result.IsSuccess)
+        {
+            return result.Error switch
+            {
+                _ => Problem()
+            };
+        }
+
+        return Ok(result.Value);
     }
 
     [HttpDelete]
     [Authorize]
-    public async Task<IActionResult> Delete(DeleteTopicGroupDto request)
+    public async Task<IActionResult> Delete(DeleteTopicGroupCommand command, CancellationToken ct)
     {
-        if (request.TopicGroupId == Guid.Empty)
-        {
-            return BadRequest();
-        }
+        var result = await _mediator.Send(command, ct);
 
-        await _topicLogic.DeleteTopicGroupAsync(request.TopicGroupId);
+        if (!result.IsSuccess)
+        {
+            return result.Error switch
+            {
+                DeleteTopicGroupError.TopicGroupNotFound => NotFound(),
+                _ => Problem()
+            };
+        }
 
         return Ok();
     }

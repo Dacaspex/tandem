@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Tandem.Infrastructure.Database\Tandem.Infrastructure.Database.csproj" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
     </ItemGroup>
-
 </Project>

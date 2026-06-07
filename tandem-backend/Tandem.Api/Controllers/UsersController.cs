@@ -1,26 +1,25 @@
 using System.Security.Claims;
+using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Tandem.Api.Dtos;
-using Tandem.Api.Dtos.Request;
-using Tandem.Api.Dtos.Response;
-using Tandem.Persistence.Entities;
-using Tandem.Persistence.Repositories;
+using Tandem.Api.Queries.GetUsers;
+using Tandem.Domain.Users;
 
 namespace Tandem.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController : BaseController
+public class UsersController : ControllerBase
 {
+    private readonly IMediator _mediator;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly UserRepository _userRepository;
 
-    public UsersController(UserManager<ApplicationUser> userManager, UserRepository userRepository)
+    public UsersController(IMediator mediator, UserManager<ApplicationUser> userManager)
     {
+        _mediator = mediator;
         _userManager = userManager;
-        _userRepository = userRepository;
     }
 
     [HttpGet("me")]
@@ -58,8 +57,8 @@ public class UsersController : BaseController
 
     [HttpGet]
     [Authorize]
-    public async Task<List<UserDto>> GetUsers()
+    public async Task<List<GetUsersDto>> GetUsers(GetUsersQuery query, CancellationToken ct)
     {
-        return (await _userRepository.GetUsers()).Select(Mapper.Map).ToList();
+        return await _mediator.Send(query, ct);
     }
 }

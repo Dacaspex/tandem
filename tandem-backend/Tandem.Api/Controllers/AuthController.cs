@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Tandem.Api.Dtos.Request;
-using Tandem.Persistence.Entities;
+using Tandem.Domain.Users;
 
 namespace Tandem.Api.Controllers;
 
